@@ -6,7 +6,7 @@ abstract class IAuthService {
   Future<String?> login({ required String username, required String password});
   Future<void> logout();
   Future<String?> getToken();
-  bool isTokenValid(String token);
+  bool isTokenValid({ required String token });
 }
 
 
@@ -25,14 +25,14 @@ class AuthService implements IAuthService {
           "password": password
         },
       );
-      print(response);
+      print("response $response");
 
       if(response.statusCode == 200){
         final Map<String, dynamic> responseData = response.data;
         final String token = responseData["token"];
 
         await _saveToken(token);
-
+        print(token);
        
         return token;
       } else {
@@ -50,15 +50,15 @@ class AuthService implements IAuthService {
   }
   
   @override
-  bool isTokenValid(String token) {
+  bool isTokenValid({ required String token }){
     return JwtDecoder.isExpired(token);
   }
   
   @override
-  Future<void> logout() async {
+  Future<bool> logout() async {
     await _clearToken();
+    return false;
   }
-
 
   Future<void> _saveToken(String token) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -67,7 +67,9 @@ class AuthService implements IAuthService {
   
   Future<void> _clearToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("limpou");
     prefs.remove("token");
   }
+
 
 }

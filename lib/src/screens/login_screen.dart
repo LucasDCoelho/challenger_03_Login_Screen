@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_3/src/data/services/auth/auth_services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:project_3/src/data/store/form_store/form_store.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,10 +11,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AuthService _authService = AuthService();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final FormStore _formStore = FormStore();
+
+  @override
+  void initState() {
+    super.initState();
+    _formStore.setupValidations();
+  }
+
+  void disposeState() {
+    _formStore.disposer();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,58 +32,55 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Center(
           child: Form(
-        key: _formKey,
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: TextFormField(
-                controller: _usernameController,
-                keyboardType: TextInputType.name,
-                decoration: const InputDecoration(
-                  hintText: "Digite seu username",
+            Observer(
+                builder: (context) => Padding(
+                  padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 10),
+                  child: TextFormField(
+                        onChanged: (value) => _formStore.username = value,
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: "Username",
+                          hintText: "Digite seu username",
+                          errorText: _formStore.errorForm.username
+                        ),
+                      ),
+                )),
+            Observer(
+              builder: (context) => Padding(
+                padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 30),
+                child: TextFormField(
+                  onChanged: (value) => _formStore.password = value,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: "Senha",
+                    hintText: "Digite sua senha",
+                    errorText: _formStore.errorForm.password
+                  ),
                 ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Digite um username';
-                  }
-                  return null;
-                },
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  hintText: "Digite sua senha",
-                ),
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Digite uma senha';
-                  }
-                  return null;
-                },
-              ),
+              padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 50),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(3))),
+                    minimumSize: const Size.fromHeight(50),
+                  ),
+                  onPressed: () async{
+                    _formStore.validateAll();
+                    if(_formStore.canLogin){
+                      await _formStore.login();
+                      if(_formStore.isTokenValid){
+                        Modular.to.navigate("/");
+                        print("Success");
+                      }
+                    }
+                  },
+                  child: const Text("Entrar")),
             ),
-            ElevatedButton(onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _authService.login(
-                  username: _usernameController.value.text, 
-                  password: _passwordController.value.text
-                  );
-                print("Deu certo!");
-              }
-            }, child: const Text("Entrar")
-            ),
-            ElevatedButton(onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _authService.logout();
-                 print("Logout");
-              }
-             
-            }, child: const Text("Sair")
-            )
           ],
         ),
       )),
