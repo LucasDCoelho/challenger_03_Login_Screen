@@ -48,6 +48,8 @@ class AuthService implements IAuthService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString("token");
   }
+
+  // Map 
   
   @override
   bool isTokenValid({ required String token }){
@@ -67,7 +69,6 @@ class AuthService implements IAuthService {
   
   Future<void> _clearToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    print("limpou");
     prefs.remove("token");
   }
 

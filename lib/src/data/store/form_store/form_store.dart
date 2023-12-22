@@ -11,7 +11,7 @@ class FormStore = _FormStore with _$FormStore;
 abstract class _FormStore with Store {
   final AuthService authService = AuthService();
 
- @observable
+  @observable
   FormExceptionState errorForm = FormExceptionState();
 
   @observable
@@ -27,7 +27,6 @@ abstract class _FormStore with Store {
   bool get canLogin => !errorForm.hasErrors;
   
   late List<ReactionDisposer> _disposers;
-
 
   void setupValidations() {
     _disposers = [
@@ -57,7 +56,6 @@ abstract class _FormStore with Store {
 
   @action
   Future<bool> login() async {
-    // Assuming you're using async/await for login process
     final String? token = await authService.login(
       username: username,
       password: password,
@@ -67,7 +65,6 @@ abstract class _FormStore with Store {
       return isTokenValid = true;
     } else {
       return isTokenValid = false;
-      // Handle login failure, update errorForm or show an error message
     }
   }
 

@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: const Text(
                     "Entrar",
-                 )),
+                )),
             ),
           ],
         ),
