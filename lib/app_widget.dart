@@ -9,7 +9,8 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: "My login app",
-      theme: ThemeData(primaryColor: const Color.fromARGB(255, 39, 62, 194)),
+      theme: ThemeData(
+        primaryColor: Colors.indigo),
       routerConfig: Modular.routerConfig,
     );
   }

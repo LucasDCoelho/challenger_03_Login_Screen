@@ -36,29 +36,29 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             Observer(
                 builder: (context) => Padding(
-                  padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 10),
-                  child: TextFormField(
+                      padding: const EdgeInsets.only(
+                          left: 18.0, right: 18.0, top: 10),
+                      child: TextFormField(
                         onChanged: (value) => _formStore.username = value,
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          labelText: "Username",
-                          hintText: "Digite seu username",
-                          errorText: _formStore.errorForm.username
-                        ),
+                            border: const OutlineInputBorder(),
+                            labelText: "Username",
+                            hintText: "Digite seu username",
+                            errorText: _formStore.errorForm.username),
                       ),
-                )),
+                    )),
             Observer(
               builder: (context) => Padding(
-                padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 30),
+                padding:
+                    const EdgeInsets.only(left: 18.0, right: 18.0, top: 30),
                 child: TextFormField(
                   onChanged: (value) => _formStore.password = value,
                   decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: "Senha",
-                    hintText: "Digite sua senha",
-                    errorText: _formStore.errorForm.password
-                  ),
+                      border: const OutlineInputBorder(),
+                      labelText: "Senha",
+                      hintText: "Digite sua senha",
+                      errorText: _formStore.errorForm.password),
                 ),
               ),
             ),
@@ -66,20 +66,23 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(left: 18.0, right: 18.0, top: 50),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(3))),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(3))),
                     minimumSize: const Size.fromHeight(50),
                   ),
-                  onPressed: () async{
+                  onPressed: () async {
                     _formStore.validateAll();
-                    if(_formStore.canLogin){
+                    if (_formStore.canLogin) {
                       await _formStore.login();
-                      if(_formStore.isTokenValid){
+                      if (_formStore.isTokenValid) {
                         Modular.to.navigate("/");
                         print("Success");
                       }
                     }
                   },
-                  child: const Text("Entrar")),
+                  child: const Text(
+                    "Entrar",
+                 )),
             ),
           ],
         ),
