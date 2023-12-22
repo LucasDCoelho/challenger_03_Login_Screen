@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:project_3/src/data/services/auth/auth_services.dart';
-import 'package:project_3/src/data/store/form_store/form_store.dart';
+import 'package:project_3/src/widgets/drawer_custom.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final AuthService _authService = AuthService();
-  final FormStore _formStore = FormStore();
 
 
   @override
@@ -29,6 +26,7 @@ class HomeScreenState extends State<HomeScreen> {
              Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
 
             return Scaffold(
+              drawer: CustomDrawer(decodedToken: decodedToken,),
       appBar: AppBar(
         title: const Text("Home"),
       ),
@@ -122,15 +120,6 @@ class HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          Observer(
-              builder: (context) => ElevatedButton(
-                  onPressed: () async {
-                      await _formStore.logout();
-                      if(_formStore.isTokenValid == false){
-                        Modular.to.navigate("/login");
-                      }
-                  },
-                  child: const Text("Sair")))
                   ],
                 )),
               );
